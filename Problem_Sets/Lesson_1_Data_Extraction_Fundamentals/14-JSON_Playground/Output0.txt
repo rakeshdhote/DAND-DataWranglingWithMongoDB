@@ -1,0 +1,316 @@
+{
+  "artists": [
+    {
+      "aliases": [
+        {
+          "begin-date": null, 
+          "end-date": null, 
+          "locale": null, 
+          "name": "Nirvana US", 
+          "primary": null, 
+          "sort-name": "Nirvana US", 
+          "type": null
+        }
+      ], 
+      "area": {
+        "id": "489ce91b-6658-3307-9877-795b68554c98", 
+        "name": "United States", 
+        "sort-name": "United States"
+      }, 
+      "begin-area": {
+        "id": "a640b45c-c173-49b1-8030-973603e895b5", 
+        "name": "Aberdeen", 
+        "sort-name": "Aberdeen"
+      }, 
+      "country": "US", 
+      "disambiguation": "90s US grunge band", 
+      "id": "5b11f4ce-a62d-471e-81fc-a69a8278c7da", 
+      "life-span": {
+        "begin": "1988-01", 
+        "end": "1994-04-05", 
+        "ended": true
+      }, 
+      "name": "Nirvana", 
+      "score": "100", 
+      "sort-name": "Nirvana", 
+      "tags": [
+        {
+          "count": 2, 
+          "name": "punk"
+        }, 
+        {
+          "count": 1, 
+          "name": "legendary"
+        }, 
+        {
+          "count": 1, 
+          "name": "90"
+        }, 
+        {
+          "count": 2, 
+          "name": "seattle"
+        }, 
+        {
+          "count": 1, 
+          "name": "northwest"
+        }, 
+        {
+          "count": 1, 
+          "name": "alternative"
+        }, 
+        {
+          "count": 1, 
+          "name": "rock and indie"
+        }, 
+        {
+          "count": 1, 
+          "name": "am\u00e9ricain"
+        }, 
+        {
+          "count": 2, 
+          "name": "usa"
+        }, 
+        {
+          "count": 7, 
+          "name": "american"
+        }, 
+        {
+          "count": 1, 
+          "name": "united states"
+        }, 
+        {
+          "count": 1, 
+          "name": "kurt cobain"
+        }, 
+        {
+          "count": 2, 
+          "name": "90s"
+        }, 
+        {
+          "count": 3, 
+          "name": "alternative rock"
+        }, 
+        {
+          "count": 1, 
+          "name": "nirvana"
+        }, 
+        {
+          "count": 1, 
+          "name": "band"
+        }, 
+        {
+          "count": 7, 
+          "name": "rock"
+        }, 
+        {
+          "count": 11, 
+          "name": "grunge"
+        }
+      ], 
+      "type": "Group"
+    }, 
+    {
+      "area": {
+        "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed", 
+        "name": "United Kingdom", 
+        "sort-name": "United Kingdom"
+      }, 
+      "begin-area": {
+        "id": "f03d09b3-39dc-4083-afd6-159e3f0d462f", 
+        "name": "London", 
+        "sort-name": "London"
+      }, 
+      "country": "GB", 
+      "disambiguation": "60s band from the UK", 
+      "id": "9282c8b4-ca0b-4c6b-b7e3-4f7762dfc4d6", 
+      "life-span": {
+        "begin": "1967", 
+        "ended": null
+      }, 
+      "name": "Nirvana", 
+      "score": "100", 
+      "sort-name": "Nirvana", 
+      "tags": [
+        {
+          "count": 1, 
+          "name": "rock"
+        }, 
+        {
+          "count": 1, 
+          "name": "pop"
+        }, 
+        {
+          "count": 1, 
+          "name": "progressive rock"
+        }, 
+        {
+          "count": 1, 
+          "name": "orchestral"
+        }, 
+        {
+          "count": 1, 
+          "name": "british"
+        }, 
+        {
+          "count": 1, 
+          "name": "power pop"
+        }, 
+        {
+          "count": 1, 
+          "name": "psychedelic rock"
+        }, 
+        {
+          "count": 1, 
+          "name": "soft rock"
+        }, 
+        {
+          "count": 1, 
+          "name": "symphonic rock"
+        }, 
+        {
+          "count": 1, 
+          "name": "english"
+        }
+      ], 
+      "type": "Group"
+    }, 
+    {
+      "area": {
+        "id": "6a264f94-6ff1-30b1-9a81-41f7bfabd616", 
+        "name": "Finland", 
+        "sort-name": "Finland"
+      }, 
+      "country": "FI", 
+      "disambiguation": "Early 1980's Finnish punk band", 
+      "id": "85af0709-95db-4fbc-801a-120e9f4766d0", 
+      "life-span": {
+        "ended": null
+      }, 
+      "name": "Nirvana", 
+      "score": "100", 
+      "sort-name": "Nirvana", 
+      "tags": [
+        {
+          "count": 1, 
+          "name": "punk"
+        }, 
+        {
+          "count": 1, 
+          "name": "finland"
+        }
+      ], 
+      "type": "Group"
+    }, 
+    {
+      "id": "b305320e-c158-43f4-b5be-4450e2f99a32", 
+      "life-span": {
+        "ended": null
+      }, 
+      "name": "El Nirvana", 
+      "score": "62", 
+      "sort-name": "Nirvana, El"
+    }, 
+    {
+      "id": "329c04ae-3b73-4ca3-996f-75608ab1befb", 
+      "life-span": {
+        "ended": null
+      }, 
+      "name": "Nirvana Singh", 
+      "score": "62", 
+      "sort-name": "Singh, Nirvana", 
+      "type": "Person"
+    }, 
+    {
+      "aliases": [
+        {
+          "begin-date": null, 
+          "end-date": null, 
+          "locale": null, 
+          "name": "Nirvana", 
+          "primary": null, 
+          "sort-name": "Nirvana", 
+          "type": null
+        }, 
+        {
+          "begin-date": null, 
+          "end-date": null, 
+          "locale": null, 
+          "name": "Prophet 2002", 
+          "primary": null, 
+          "sort-name": "Prophet 2002", 
+          "type": null
+        }
+      ], 
+      "area": {
+        "id": "23d10872-f5ae-3f0c-bf55-332788a16ecb", 
+        "name": "Sweden", 
+        "sort-name": "Sweden"
+      }, 
+      "country": "SE", 
+      "disambiguation": "Swedish death metal band", 
+      "id": "f2dfdff9-3862-4be0-bf85-9c833fa3059e", 
+      "life-span": {
+        "begin": "1988", 
+        "ended": null
+      }, 
+      "name": "Nirvana 2002", 
+      "score": "62", 
+      "sort-name": "Nirvana 2002", 
+      "type": "Group"
+    }, 
+    {
+      "area": {
+        "id": "489ce91b-6658-3307-9877-795b68554c98", 
+        "name": "United States", 
+        "sort-name": "United States"
+      }, 
+      "country": "US", 
+      "id": "c3a64a25-251b-4d03-afba-1471440245b8", 
+      "life-span": {
+        "ended": null
+      }, 
+      "name": "Approaching Nirvana", 
+      "score": "62", 
+      "sort-name": "Approaching Nirvana", 
+      "type": "Group"
+    }, 
+    {
+      "area": {
+        "id": "489ce91b-6658-3307-9877-795b68554c98", 
+        "name": "United States", 
+        "sort-name": "United States"
+      }, 
+      "country": "US", 
+      "gender": "female", 
+      "id": "206419e0-3a7a-49ce-8437-4e757767d02b", 
+      "life-span": {
+        "ended": null
+      }, 
+      "name": "Nirvana Savoury", 
+      "score": "62", 
+      "sort-name": "Savoury, Nirvana", 
+      "type": "Person"
+    }, 
+    {
+      "id": "86f9ae24-ba2a-4d55-9275-0b89b85f6e3a", 
+      "life-span": {
+        "ended": null
+      }, 
+      "name": "Weed Nirvana", 
+      "score": "62", 
+      "sort-name": "Weed Nirvana"
+    }, 
+    {
+      "id": "e1388435-f80d-434a-9980-f1c9f5aa9b90", 
+      "life-span": {
+        "ended": null
+      }, 
+      "name": "Nirvana Sitar & String Group", 
+      "score": "43", 
+      "sort-name": "Nirvana Sitar & String Group"
+    }
+  ], 
+  "count": 10, 
+  "created": "2015-06-11T04:05:40.267Z", 
+  "offset": 0
+}
