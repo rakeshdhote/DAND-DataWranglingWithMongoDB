@@ -1,86 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-"""
-Your task is to wrangle the data and transform the shape of the data
-into the model we mentioned earlier. The output should be a list of dictionaries
-that look like this:
-
-{
-"id": "2406124091",
-"type: "node",
-"visible":"true",
-"created": {
-          "version":"2",
-          "changeset":"17206049",
-          "timestamp":"2013-08-03T16:43:42Z",
-          "user":"linuxUser16",
-          "uid":"1219059"
-        },
-"pos": [41.9757030, -87.6921867],
-"address": {
-          "housenumber": "5157",
-          "postcode": "60625",
-          "street": "North Lincoln Ave"
-        },
-"amenity": "restaurant",
-"cuisine": "mexican",
-"name": "La Cabana De Don Luis",
-"phone": "1 (773)-271-5176"
-}
-
-You have to complete the function 'shape_element'.
-We have provided a function that will parse the map file, and call the function with the element
-as an argument. You should return a dictionary, containing the shaped data for that element.
-We have also provided a way to save the data in a file, so that you could use
-mongoimport later on to import the shaped data into MongoDB.
-
-Note that in this exercise we do not use the 'update street name' procedures
-you worked on in the previous exercise. If you are using this code in your final
-project, you are strongly encouraged to use the code from previous exercise to
-update the street names before you save them to JSON.
-
-In particular the following things should be done:
-- you should process only 2 types of top level tags: "node" and "way"
-- all attributes of "node" and "way" should be turned into regular key/value pairs, except:
-    - attributes in the CREATED array should be added under a key "created"
-    - attributes for latitude and longitude should be added to a "pos" array,
-      for use in geospacial indexing. Make sure the values inside "pos" array are floats
-      and not strings.
-- if second level tag "k" value contains problematic characters, it should be ignored
-- if second level tag "k" value starts with "addr:", it should be added to a dictionary "address"
-- if second level tag "k" value does not start with "addr:", but contains ":", you can process it
-  same as any other tag.
-- if there is a second ":" that separates the type/direction of a street,
-  the tag should be ignored, for example:
-
-<tag k="addr:housenumber" v="5158"/>
-<tag k="addr:street" v="North Lincoln Avenue"/>
-<tag k="addr:street:name" v="Lincoln"/>
-<tag k="addr:street:prefix" v="North"/>
-<tag k="addr:street:type" v="Avenue"/>
-<tag k="amenity" v="pharmacy"/>
-
-  should be turned into:
-
-{...
-"address": {
-    "housenumber": 5158,
-    "street": "North Lincoln Avenue"
-}
-"amenity": "pharmacy",
-...
-}
-
-- for "way" specifically:
-
-  <nd ref="305896090"/>
-  <nd ref="1719825889"/>
-
-should be turned into
-"node_refs": ["305896090", "1719825889"]
-"""
-
 import xml.etree.cElementTree as ET
 import pprint
 import re
@@ -88,33 +7,92 @@ import codecs
 import json
 import time
 
-OSMFILE = "example.osm"
-# OSMFILE = "toronto_canada.osm"
+# OSMFILE = "example.osm"
+OSMFILE = "toronto_canada.osm"
 
+# Regex queries
 lower = re.compile(r'^([a-z]|_)*$')
 lower_colon = re.compile(r'^([a-z]|_)*:([a-z]|_)*$')
 problemchars = re.compile(r'[=\+/&<>;\'"\?%#$@\,\. \t\r\n]')
-
 starts_with = re.compile(r'^addr:')
 ends_with = re.compile(r'\w+$')
-street_type_re = re.compile(r'\b\S+\.?$', re.IGNORECASE)
 
+street_type_post = re.compile(r'\b\S+\.?$', re.IGNORECASE)
+street_type_pre = re.compile(r'^\b\S\.?', re.IGNORECASE)
+
+postcode_pre = re.compile(r'^...')
+postcode_post = re.compile(r'...$')
+postcode_first = re.compile(r'^[^,]*')
+
+# fields required in the node['address'] dictionary
 CREATED = ["version", "changeset", "timestamp", "user", "uid"]
 
-# UPDATE THIS VARIABLE
-mapping = {"St": "Street",
-           "St.": "Street",
-           "Ave": "Avenue",
-           "Rd.": "Road"
+# Clean the data from the key : value pair in the mapping dictionary
+mapping = {'Ave': 'Avenue',
+           'Ave.': 'Avenue',
+           'Alliston': '',
+           'Amaranth': '',
+           'Avens': 'Avens Boulevard',
+           'Blvd': 'Boulevard',
+           'Blvd.': 'Boulevard',
+           'Boulevade': 'Boulevard',
+           'Cir': 'Circle',
+           'Crct': 'Crescent',
+           'Cresent': 'Crescent',
+           'Cressent': 'Crescent',
+           'Crt.': 'Circuit',
+           'Dr': 'Drive',
+           'Dr.': 'Drive',
+           'E': 'East',
+           'E.': 'East',
+           'Grv': 'Grove',
+           'Ldg': 'Landing',
+           'Hrbr': 'Harbour Way',
+           'Manors': 'Manor',
+           'N': 'North',
+           'Puschlinch': 'Puslinch',
+           'Rd': 'Road',
+           'Rd.': 'Road',
+           'S': 'South',
+           'S.': 'South',
+           'St': 'Street',
+           'St.': 'Street',
+           'Terace': 'Terrace',
+           'Terraces': 'Terrace',
+           'Trl': 'Trail',
+           'W': 'West',
+           'W.': 'West',
+           'avenue': 'Avenue'
            }
 
+
+# Function to audit the postcode in a format 'M4Y 1R5'
+# If there are more than one postcode, the first one will be selected
+def update_postcode(node, postcode):
+    postcode1 = postcode_first.search(postcode).group()
+    if len(postcode1) != 7:
+        postcode2 = postcode_pre.search(postcode1).group() + ' ' + postcode_post.search(postcode1).group()
+        node['address']['postcode'] = postcode2.upper()
+    else:
+        node['address']['postcode'] = postcode1.upper()
+
+
+# Function to audit the street name from abbreviations at the end to the full name
+# ex. Charles St. ==> Charles Street
+def update_address(node, name):
+    st_type = street_type_post.search(name)
+    if st_type:
+        mm = st_type.group()
+        if mm in mapping.keys():
+            node['address']['street'] = re.sub(mm, mapping[mm], name)
+
+
+# Function to create a JSON file from the xml document
 def shape_element(element):
-    node = {}
-    node['created'] = {}
+    node = {'created': {}}
 
     if element.tag == "node" or element.tag == "way":
         # YOUR CODE HERE
-        #        print element.attrib
         if element.tag == "node":
             node['type'] = 'node'
 
@@ -140,7 +118,6 @@ def shape_element(element):
                     node[attribute] = tag.attrib['v']
 
         for item in element.attrib.keys():
-            #            print item, element.attrib[item]
             if element.tag == "way":
                 node['node_refs'] = []
                 for tag in element.iter("nd"):
@@ -156,25 +133,32 @@ def shape_element(element):
                 node[item] = element.attrib[item]
 
         if 'address' in node.keys():
-            print node['address']['street']
+            # Audit the street name
+            for tag in element.iter("tag"):
+                if tag.attrib['k'] == "addr:street":
+                    name = tag.attrib['v']
+                    update_address(node, name)
+
+                    # Audit the postcode in format 'M4Y 1R5'
+                if tag.attrib['k'] == "addr:postcode":
+                    postcode = tag.attrib['v']
+                    update_postcode(node, postcode)
         else:
-            print 'ooooo'
+            pass
 
         return node
     else:
         return None
 
 
+# Dump the xml file to the JSON file
 def process_map(file_in, pretty=False):
-    # You do not need to change this file
-    # file_in = 'example.osm'
     file_out = "{0}.json".format(file_in)
     data = []
     with codecs.open(file_out, "w") as fo:
         fo.write('[')
         for _, element in ET.iterparse(file_in):
             el = shape_element(element)
-            # print el
             if el:
                 data.append(el)
                 if pretty:
@@ -185,17 +169,13 @@ def process_map(file_in, pretty=False):
     return data
 
 
-def test():
+if __name__ == "__main__":
     # NOTE: if you are running this code on your computer, with a larger dataset,
     # call the process_map procedure with pretty=False. The pretty=True option adds
     # additional spaces to the output, making it significantly larger.
-    data = process_map(OSMFILE, False)  # True
-    # pprint.pprint(data)
 
-
-
-if __name__ == "__main__":
     start = time.clock()
-    test()
+    data = process_map(OSMFILE, False)
     end = time.clock()
     print 'Time spent (s) : ', (end - start)
+
