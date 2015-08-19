@@ -6,7 +6,7 @@ Link: [Udacity - Data Wrangling with MongoDB](https://www.udacity.com/course/dat
 The course focused on the foundations of the 
 *  Extract data stored in common formats such as csv, Microsoft Excel, JSON, XML and data scraping from HTML   
 *  Audit data for quality - accuracy, completeness, consistency, uniformity, and validity  
-*  Storing, retriving, and analyzing data using MongoDB.  
+*  Storing, retrieving, and analyzing data using MongoDB.  
 
 Exercises are programmed in Python and MongoDB.  
 

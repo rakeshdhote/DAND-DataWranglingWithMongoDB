@@ -27,43 +27,91 @@ postcode_first = re.compile(r'^[^,]*')
 # fields required in the node['address'] dictionary
 CREATED = ["version", "changeset", "timestamp", "user", "uid"]
 
-# Clean the data from the key : value pair in the mapping dictionary
-mapping = {'Ave': 'Avenue',
-           'Ave.': 'Avenue',
-           'Alliston': '',
-           'Amaranth': '',
-           'Avens': 'Avens Boulevard',
-           'Blvd': 'Boulevard',
-           'Blvd.': 'Boulevard',
-           'Boulevade': 'Boulevard',
-           'Cir': 'Circle',
-           'Crct': 'Crescent',
-           'Cresent': 'Crescent',
-           'Cressent': 'Crescent',
-           'Crt.': 'Circuit',
-           'Dr': 'Drive',
-           'Dr.': 'Drive',
-           'E': 'East',
-           'E.': 'East',
-           'Grv': 'Grove',
-           'Ldg': 'Landing',
-           'Hrbr': 'Harbour Way',
-           'Manors': 'Manor',
-           'N': 'North',
-           'Puschlinch': 'Puslinch',
-           'Rd': 'Road',
-           'Rd.': 'Road',
-           'S': 'South',
-           'S.': 'South',
-           'St': 'Street',
-           'St.': 'Street',
-           'Terace': 'Terrace',
-           'Terraces': 'Terrace',
-           'Trl': 'Trail',
-           'W': 'West',
-           'W.': 'West',
-           'avenue': 'Avenue'
-           }
+# Clean the street data from the key : value pair in the mapping dictionary
+mappingstreet = {'Ave': 'Avenue',
+                 'Ave.': 'Avenue',
+                 'Alliston': '',
+                 'Amaranth': '',
+                 'Avens': 'Avens Boulevard',
+                 'Blvd': 'Boulevard',
+                 'Blvd.': 'Boulevard',
+                 'Boulevade': 'Boulevard',
+                 'Cir': 'Circle',
+                 'Crct': 'Crescent',
+                 'Cresent': 'Crescent',
+                 'Cressent': 'Crescent',
+                 'Crt.': 'Circuit',
+                 'Dr': 'Drive',
+                 'Dr.': 'Drive',
+                 'E': 'East',
+                 'E.': 'East',
+                 'Grv': 'Grove',
+                 'Ldg': 'Landing',
+                 'Hrbr': 'Harbour Way',
+                 'Manors': 'Manor',
+                 'N': 'North',
+                 'Puschlinch': 'Puslinch',
+                 'Rd': 'Road',
+                 'Rd.': 'Road',
+                 'S': 'South',
+                 'S.': 'South',
+                 'St': 'Street',
+                 'St.': 'Street',
+                 'Terace': 'Terrace',
+                 'Terraces': 'Terrace',
+                 'Trl': 'Trail',
+                 'W': 'West',
+                 'W.': 'West',
+                 'avenue': 'Avenue'
+                 }
+
+# Clean the city data from the key : value pair in the mapping dictionary
+mappingcity = {'Ajax, Ontario': 'Ajax',
+               'caledon': 'Caledon',
+               'City of Brampton': 'Brampton',
+               'City of Burlington': 'Burlington',
+               'City of Hamilton': 'Hamilton',
+               'City of Kawartha Lakes': 'Kawartha Lakes',
+               'City of Oshawa': 'Oshawa',
+               'City of Pickering': 'Pickering',
+               'City of St. Catharines': 'St. Catharines',
+               'City of Toronto': 'Toronto',
+               'City of Vaughan': 'Vaughan',
+               'Etobicoke, Toronto': 'Etobicoke',
+               'Missisauga': 'Mississauga',
+               'King': 'King City',
+               'Municipality of Clarington': 'Clarington',
+               'markham': 'Markham',
+               'toronto': 'Toronto',
+               'vaughan': 'Vaughan',
+               'Town of Ajax': 'Ajax',
+               'Town of Aurora': 'Aurora',
+               'Town of Bradford West Gwillimbury': 'Bradford West Gwillimbury',
+               'Town of Caledon': 'Caledon',
+               'Town of East Gwillimbury': 'East Gwillimbury',
+               'Town of Erin': 'Erin',
+               'Town of Grimsby': 'Grimsby',
+               'Town of Halton Hills': 'Halton Hills',
+               'Town of Innisfil': 'Innisfil',
+               'Town of Markham': 'Markham',
+               'Town of Milton': 'Milton',
+               'Town of Mono': 'Mono',
+               'Town of New Tecumseth': 'New Tecumseth',
+               'Town of Newmarket': 'Newmarket',
+               'Town of Niagara-On-The-Lake': 'Niagara-on-the-lake',
+               'Town of Whitby': 'Whitby',
+               'Town of Whitchurch-Stouffville': 'Whitchurch-Stouffville',
+               'Township of Adjala-Tosorontio': 'Adjala-Tosorontio',
+               'Township of Amaranth': 'Amaranth',
+               'Township of East Garafraxa': 'East Garafraxa',
+               'Township of Essa': 'Essa',
+               'Township of Guelph/Eramosa': 'Guelph/Eramosa',
+               'Township of King': 'King City',
+               'Township of Mulmur': 'Mulmur',
+               'Township of Puslinch': 'Puslinch',
+               'Township of Scugog': 'Scugog',
+               'Township of Uxbridge': 'Uxbridge'
+               }
 
 
 # Function to audit the postcode in a format 'M4Y 1R5'
@@ -75,16 +123,28 @@ def update_postcode(node, postcode):
         node['address']['postcode'] = postcode2.upper()
     else:
         node['address']['postcode'] = postcode1.upper()
+    return node
 
 
 # Function to audit the street name from abbreviations at the end to the full name
 # ex. Charles St. ==> Charles Street
-def update_address(node, name):
-    st_type = street_type_post.search(name)
-    if st_type:
-        mm = st_type.group()
-        if mm in mapping.keys():
-            node['address']['street'] = re.sub(mm, mapping[mm], name)
+def update_street(node, name):
+    m = street_type_post.search(name)
+    if m:
+        mm = m.group()
+        if mm in mappingstreet.keys():
+            node['address']['street'] = re.sub(mm, mappingstreet[mm], name)
+            print mm, ' ==> ', node['address']['street']
+    return node
+
+
+# Function to audit the street name from abbreviations at the end to the full name
+# ex. Charles St. ==> Charles Street
+def update_city(node, name):
+    if name in mappingcity.keys():
+        node['address']['city'] = re.sub(name, mappingcity[name], name)
+        print name, ' ==> ', node['address']['city']
+    return node
 
 
 # Function to create a JSON file from the xml document
@@ -133,16 +193,22 @@ def shape_element(element):
                 node[item] = element.attrib[item]
 
         if 'address' in node.keys():
-            # Audit the street name
+
             for tag in element.iter("tag"):
+                # Audit the street name
                 if tag.attrib['k'] == "addr:street":
                     name = tag.attrib['v']
-                    update_address(node, name)
+                    node = update_street(node, name)
 
-                    # Audit the postcode in format 'M4Y 1R5'
+                # Audit the city name
+                if tag.attrib['k'] == "addr:city":
+                    name = tag.attrib['v']
+                    node = update_city(node, name)
+
+                    # Audit the postcode in the format 'M4Y 1R5'
                 if tag.attrib['k'] == "addr:postcode":
                     postcode = tag.attrib['v']
-                    update_postcode(node, postcode)
+                    node = update_postcode(node, postcode)
         else:
             pass
 
@@ -178,4 +244,3 @@ if __name__ == "__main__":
     data = process_map(OSMFILE, False)
     end = time.clock()
     print 'Time spent (s) : ', (end - start)
-
